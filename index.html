@@ -1,1 +1,618 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>MALMO</title></head><body><h1>MALMÖ 040 — ESCUCHA INTERNA</h1><p>Archivo listo. Sustituye este contenido por el definitivo del canvas si quieres.</p></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MALMÖ 040 — Escucha Interna EP</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD0MzDLZc6EdYZpebk7wHj5RdBW7IvjfzQ",
+      authDomain: "malmo-040-escucha-interna.firebaseapp.com",
+      projectId: "malmo-040-escucha-interna",
+      storageBucket: "malmo-040-escucha-interna.firebasestorage.app",
+      messagingSenderId: "299759262770",
+      appId: "1:299759262770:web:c73410f3f17cb397f2b02b",
+      measurementId: "G-WXF5ZRDT8M"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.saveMalmoResponse = async function(payload) {
+      return await addDoc(collection(db, "responses"), {
+        ...payload,
+        createdAt: serverTimestamp()
+      });
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --text: #2f2d29;
+      --muted: #8b867d;
+      --line: #ded9cf;
+      --black: #000;
+      --white: #fff;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Helvetica, Arial, sans-serif;
+    }
+
+    .app {
+      width: min(100%, 1040px);
+      padding: 54px clamp(22px, 6vw, 80px);
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 0.96;
+      letter-spacing: -0.055em;
+      margin: 0 0 72px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-size: clamp(38px, 5.5vw, 60px);
+      letter-spacing: -0.045em;
+      line-height: 1;
+      margin: 0 0 54px;
+      font-weight: 850;
+    }
+
+    h3 {
+      font-size: 26px;
+      margin: 0 0 26px;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    p, li {
+      font-size: 22px;
+      line-height: 1.38;
+    }
+
+    .intro-title {
+      font-size: 24px;
+      font-weight: 850;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .instructions {
+      max-width: 830px;
+      margin-bottom: 44px;
+    }
+
+    .instructions ul {
+      margin: 24px 0 38px 0;
+      padding-left: 24px;
+      font-style: italic;
+    }
+
+    .strong { font-weight: 850; }
+
+    .field { margin: 42px 0; }
+
+    label.title {
+      display: block;
+      font-size: 30px;
+      font-weight: 850;
+      letter-spacing: -0.035em;
+      margin-bottom: 16px;
+    }
+
+    .required {
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: #edeae4;
+      font-size: 18px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    input[type="text"], input[type="number"], textarea {
+      width: min(100%, 520px);
+      background: var(--white);
+      border: 1.5px solid #d2cdc3;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      font-size: 22px;
+      color: var(--text);
+      padding: 16px 18px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea {
+      width: min(100%, 940px);
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 4px rgba(0,0,0,.08);
+    }
+
+    .options {
+      display: grid;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .option {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+      width: fit-content;
+    }
+
+    .option input {
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      border: 1.5px solid #d1ccc2;
+      border-radius: 7px;
+      background: #fff;
+      box-shadow: 0 2px 7px rgba(0,0,0,.08);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .option input:checked {
+      background: #000;
+      border-color: #000;
+    }
+
+    .option input:checked::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      width: 8px;
+      height: 15px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+
+    .nav-top {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 78px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    button.primary, button.secondary {
+      border: 0;
+      border-radius: 11px;
+      padding: 15px 22px;
+      font-size: 22px;
+      font-weight: 850;
+      cursor: pointer;
+      letter-spacing: -0.03em;
+    }
+
+    button.primary {
+      background: #000;
+      color: #fff;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: #000;
+      border: 1.5px solid #000;
+    }
+
+    .arrow { font-size: 30px; line-height: 0; }
+
+    .hidden { display: none; }
+
+    .progress {
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 750;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .error {
+      color: #b00020;
+      font-size: 17px;
+      font-weight: 750;
+      margin-top: 14px;
+    }
+
+    .success-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 34px;
+      max-width: 760px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .summary {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .app { padding-top: 34px; }
+      h1 { margin-bottom: 42px; }
+      h2 { margin-bottom: 36px; }
+      p, li { font-size: 19px; }
+      .option { font-size: 20px; }
+      label.title { font-size: 26px; }
+      .nav-top { margin-bottom: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="introPage">
+      <h1>MALMÖ 040 — ESCUCHA INTERNA EP</h1>
+
+      <div class="instructions">
+        <div class="intro-title">Instrucciones</div>
+        <p>La valoración NO representa únicamente cuánto te gusta el tema.</p>
+
+        <p class="strong">La nota debe valorar:</p>
+        <ul>
+          <li>potencial real dentro del proyecto</li>
+          <li>contexto ideal de lanzamiento</li>
+          <li>personalidad</li>
+          <li>capacidad de funcionar dentro del EP</li>
+          <li>replay value</li>
+          <li>identidad Malmö 040</li>
+        </ul>
+
+        <p><span class="strong">IMPORTANTE:</span><br>
+          Un tema puede ser un 10 como track de disco pero no funcionar como single.<br>
+          Y un single puede ser muy efectivo aunque no sea el mejor tema emocionalmente.<br>
+          <span class="strong">La nota que pongamos debe de ser en base al contexto asociado a la canción.</span>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="title" for="personName">Nombre <span class="required">*</span></label>
+        <input id="personName" type="text" autocomplete="name" />
+        <div id="introError" class="error hidden">Escribe tu nombre para continuar.</div>
+      </div>
+
+      <button class="primary" onclick="startForm()">Next <span class="arrow">→</span></button>
+    </section>
+
+    <section id="songPage" class="hidden">
+      <button class="nav-top" onclick="prevPage()"><span class="arrow">←</span> Enrere</button>
+      <div class="progress" id="progress"></div>
+      <h2 id="songTitle"></h2>
+
+      <div class="field">
+        <label class="title">Contexto <span class="required">*</span></label>
+        <div class="options" id="contextOptions"></div>
+        <div id="contextError" class="error hidden">Marca un contexto.</div>
+      </div>
+
+      <div class="field">
+        <label class="title" for="rating">Nota <span class="required">*</span></label>
+        <input id="rating" type="number" min="1" max="10" step="0.1" />
+        <div id="ratingError" class="error hidden">Pon una nota del 1 al 10.</div>
+      </div>
+
+      <div class="field">
+        <label class="title" for="notes">Anotaciones <span class="required">*</span></label>
+        <textarea id="notes"></textarea>
+        <div id="notesError" class="error hidden">Escribe alguna anotación.</div>
+      </div>
+
+      <div class="button-row">
+        <button class="primary" onclick="nextSong()" id="nextButton">Següent <span class="arrow">→</span></button>
+        <button class="secondary" onclick="saveDraft()">Guardar borrador</button>
+      </div>
+    </section>
+
+    <section id="donePage" class="hidden">
+      <h1>Escucha enviada</h1>
+      <div class="success-card">
+        <p><span class="strong">Listo.</span> Tus valoraciones han quedado guardadas en este dispositivo.</p>
+        <p>Ahora puedes descargar un informe PDF limpio con todas tus respuestas.</p>
+        <div class="button-row">
+          <button class="primary" onclick="downloadPDF()">Descargar PDF</button>
+          <button class="secondary" onclick="restart()">Volver a empezar</button>
+        </div>
+        <div class="summary" id="finalSummary"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // EDITA AQUÍ LOS TÍTULOS DE LOS TEMAS
+    const songs = [
+      "La sombra del viento",
+      "Las cosas importantes",
+      "Entre la duda y el desastre",
+      "Perdido"
+    ];
+
+    const contexts = [
+      "Single EP",
+      "Single fuera de EP",
+      "Tema relleno EP",
+      "Tema relleno fuera de EP",
+      "No publicable actualmente"
+    ];
+
+    let currentIndex = 0;
+    let data = JSON.parse(localStorage.getItem("malmoEscuchaData")) || {
+      person: "",
+      responses: songs.map(song => ({ song, context: "", rating: "", notes: "" }))
+    };
+
+    const introPage = document.getElementById("introPage");
+    const songPage = document.getElementById("songPage");
+    const donePage = document.getElementById("donePage");
+    const personName = document.getElementById("personName");
+    const songTitle = document.getElementById("songTitle");
+    const progress = document.getElementById("progress");
+    const contextOptions = document.getElementById("contextOptions");
+    const rating = document.getElementById("rating");
+    const notes = document.getElementById("notes");
+    const nextButton = document.getElementById("nextButton");
+
+    personName.value = data.person || "";
+
+    function show(page) {
+      introPage.classList.add("hidden");
+      songPage.classList.add("hidden");
+      donePage.classList.add("hidden");
+      page.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    function startForm() {
+      const name = personName.value.trim();
+      document.getElementById("introError").classList.toggle("hidden", !!name);
+      if (!name) return;
+      data.person = name;
+      saveDraft();
+      renderSong();
+      show(songPage);
+    }
+
+    function renderSong() {
+      const response = data.responses[currentIndex];
+      progress.textContent = `Tema ${currentIndex + 1} de ${songs.length}`;
+      songTitle.textContent = response.song;
+      rating.value = response.rating || "";
+      notes.value = response.notes || "";
+      nextButton.innerHTML = currentIndex === songs.length - 1 ? "Enviar <span class='arrow'>→</span>" : "Següent <span class='arrow'>→</span>";
+
+      contextOptions.innerHTML = "";
+      contexts.forEach(context => {
+        const id = `context-${currentIndex}-${context}`.replaceAll(" ", "-");
+        const label = document.createElement("label");
+        label.className = "option";
+        label.innerHTML = `
+          <input type="checkbox" name="context" id="${id}" ${response.context === context ? "checked" : ""} onchange="selectContext('${context.replaceAll("'", "\\'")}')" />
+          <span>${context}</span>
+        `;
+        contextOptions.appendChild(label);
+      });
+
+      hideErrors();
+    }
+
+    function selectContext(context) {
+      data.responses[currentIndex].context = context;
+      renderSong();
+      saveDraft();
+    }
+
+    function captureCurrent() {
+      data.responses[currentIndex].rating = rating.value;
+      data.responses[currentIndex].notes = notes.value.trim();
+    }
+
+    function validateCurrent() {
+      captureCurrent();
+      const response = data.responses[currentIndex];
+      const ratingNumber = Number(response.rating);
+
+      const hasContext = !!response.context;
+      const hasRating = ratingNumber >= 1 && ratingNumber <= 10;
+      const hasNotes = !!response.notes;
+
+      document.getElementById("contextError").classList.toggle("hidden", hasContext);
+      document.getElementById("ratingError").classList.toggle("hidden", hasRating);
+      document.getElementById("notesError").classList.toggle("hidden", hasNotes);
+
+      return hasContext && hasRating && hasNotes;
+    }
+
+    function hideErrors() {
+      ["contextError", "ratingError", "notesError"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    }
+
+    function nextSong() {
+      if (!validateCurrent()) return;
+      saveDraft();
+
+      if (currentIndex < songs.length - 1) {
+        currentIndex++;
+        renderSong();
+      } else {
+        submitAll();
+      }
+    }
+
+    function prevPage() {
+      captureCurrent();
+      saveDraft();
+      if (currentIndex === 0) {
+        show(introPage);
+      } else {
+        currentIndex--;
+        renderSong();
+      }
+    }
+
+    function saveDraft() {
+      if (!songPage.classList.contains("hidden")) captureCurrent();
+      data.person = personName.value.trim() || data.person;
+      localStorage.setItem("malmoEscuchaData", JSON.stringify(data));
+    }
+
+    async function submitAll() {
+      saveDraft();
+
+      try {
+        await window.saveMalmoResponse({
+          person: data.person,
+          responses: data.responses
+        });
+
+        document.getElementById("finalSummary").textContent = `${data.person} — ${data.responses.length} temas valorados y guardados online.`;
+        downloadPDF();
+        show(donePage);
+      } catch (error) {
+        console.error(error);
+        alert("Error guardando las respuestas en Firebase.");
+      }
+    }
+
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+      const margin = 18;
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const contentWidth = pageWidth - margin * 2;
+      let y = 22;
+
+      const clean = (text) => String(text || "").replace(/\s+/g, " ").trim();
+
+      function addPageIfNeeded(extra = 20) {
+        if (y + extra > pageHeight - 20) {
+          doc.addPage();
+          y = 22;
+        }
+      }
+
+      function label(text) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(120, 120, 120);
+        doc.text(text.toUpperCase(), margin, y);
+        y += 6;
+      }
+
+      function value(text, size = 13) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(size);
+        doc.setTextColor(35, 35, 35);
+        const lines = doc.splitTextToSize(clean(text), contentWidth);
+        doc.text(lines, margin, y);
+        y += lines.length * (size * 0.42) + 6;
+      }
+
+      doc.setFillColor(247, 245, 240);
+      doc.rect(0, 0, pageWidth, pageHeight, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(28);
+      doc.setTextColor(20, 20, 20);
+      doc.text("MALMÖ 040", margin, y);
+      y += 12;
+      doc.setFontSize(22);
+      doc.text("ESCUCHA INTERNA EP", margin, y);
+      y += 14;
+
+      doc.setDrawColor(20, 20, 20);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 14;
+
+      label("Persona");
+      value(data.person, 16);
+
+      const validRatings = data.responses.map(r => Number(r.rating)).filter(n => !Number.isNaN(n));
+      const avg = validRatings.length ? (validRatings.reduce((a,b) => a + b, 0) / validRatings.length).toFixed(1) : "—";
+      const singles = data.responses.filter(r => r.context === "Single EP" || r.context === "Single fuera de EP").length;
+
+      label("Resumen");
+      value(`Temas valorados: ${data.responses.length} · Nota media: ${avg} · Singles marcados: ${singles}`, 12);
+
+      data.responses.forEach((r, i) => {
+        addPageIfNeeded(70);
+
+        doc.setDrawColor(215, 211, 202);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(19);
+        doc.setTextColor(20, 20, 20);
+        const titleLines = doc.splitTextToSize(`${i + 1}. ${r.song}`, contentWidth);
+        doc.text(titleLines, margin, y);
+        y += titleLines.length * 8 + 5;
+
+        label("Contexto");
+        value(r.context || "—", 13);
+
+        label("Nota");
+        value(r.rating || "—", 13);
+
+        label("Anotaciones");
+        value(r.notes || "—", 12);
+      });
+
+      const fileName = `MALMO_040_Escucha_${(data.person || "respuesta").replace(/\s+/g, "_")}.pdf`;
+      doc.save(fileName);
+    }
+
+    function restart() {
+      if (!confirm("¿Seguro que quieres borrar este borrador y empezar de nuevo?")) return;
+      localStorage.removeItem("malmoEscuchaData");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
