@@ -29,7 +29,7 @@ body{
 }
 
 .container{
-  max-width:1100px;
+  max-width:1200px;
 }
 
 .topbar{
@@ -45,11 +45,20 @@ body{
 
 .title{
   font-family:'Archivo Black',sans-serif;
-  font-size:clamp(72px,10vw,170px);
+  font-size:160px;
   line-height:0.88;
   letter-spacing:-0.06em;
   margin-bottom:80px;
   max-width:1200px;
+}
+
+.song-title{
+  font-family:'Archivo Black',sans-serif;
+  font-size:130px;
+  line-height:0.88;
+  letter-spacing:-0.06em;
+  max-width:1100px;
+  margin-bottom:70px;
 }
 
 .label{
@@ -61,7 +70,7 @@ body{
 }
 
 .intro-block{
-  max-width:900px;
+  max-width:920px;
 }
 
 .intro-block p{
@@ -105,46 +114,16 @@ a{
   outline:none;
 }
 
-.start-btn,
-.nav-btn,
-.finish-btn{
-  border:none;
-  background:#111;
-  color:white;
-  padding:22px 34px;
-  cursor:pointer;
-  font-family:'IBM Plex Mono',monospace;
-  font-size:18px;
-  margin-top:40px;
-}
-
-.song-screen{
-  display:none;
-}
-
-.song-header{
-  margin-bottom:50px;
-}
-
-.song-count{
-  font-family:'IBM Plex Mono',monospace;
-  color:#8a8a8a;
-  font-size:14px;
-  margin-bottom:30px;
-}
-
-.song-title{
-  font-family:'Archivo Black',sans-serif;
-  font-size:clamp(56px,8vw,140px);
-  line-height:0.88;
-  letter-spacing:-0.06em;
-  max-width:1100px;
-  margin-bottom:70px;
-}
-
-.section{
-  margin-bottom:60px;
-  max-width:900px;
+.textarea{
+  width:100%;
+  min-height:220px;
+  border:2px solid #111;
+  background:transparent;
+  padding:24px;
+  resize:vertical;
+  font-size:20px;
+  font-family:'Inter',sans-serif;
+  outline:none;
 }
 
 .checkbox-group{
@@ -166,16 +145,20 @@ a{
   height:28px;
 }
 
-.textarea{
-  width:100%;
-  min-height:220px;
-  border:2px solid #111;
-  background:transparent;
-  padding:24px;
-  resize:vertical;
-  font-size:20px;
-  font-family:'Inter',sans-serif;
-  outline:none;
+.section{
+  margin-bottom:60px;
+  max-width:900px;
+}
+
+.song-screen{
+  display:none;
+}
+
+.song-count{
+  font-family:'IBM Plex Mono',monospace;
+  color:#8a8a8a;
+  font-size:14px;
+  margin-bottom:30px;
 }
 
 .bottom-nav{
@@ -184,43 +167,20 @@ a{
   margin-top:40px;
 }
 
-.hidden{
-  display:none;
+.start-btn,
+.nav-btn,
+.finish-btn{
+  border:none;
+  background:#111;
+  color:white;
+  padding:22px 34px;
+  cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:18px;
 }
 
-@media(max-width:768px){
-
-  body{
-    padding:28px;
-  }
-
-  .topbar{
-    margin-bottom:50px;
-    font-size:12px;
-  }
-
-  .title{
-    font-size:72px;
-    line-height:0.92;
-    margin-bottom:60px;
-  }
-
-  .song-title{
-    font-size:72px;
-    line-height:0.92;
-  }
-
-  .intro-block p,
-  .intro-block li,
-  .important-title{
-    font-size:18px;
-  }
-
-  .input{
-    font-size:20px;
-    padding:20px;
-  }
-
+.hidden{
+  display:none;
 }
 
 </style>
@@ -275,18 +235,21 @@ a{
     </div>
 
     <div class="name-block">
+
       <div class="label">NOMBRE *</div>
 
       <input
         class="input"
         type="text"
         id="userName"
-        placeholder=""
       />
+
+      <br><br>
 
       <button class="start-btn" onclick="startForm()">
         EMPEZAR →
       </button>
+
     </div>
 
   </div>
@@ -332,6 +295,7 @@ document.getElementById("userName").value = data.name || "";
 function startForm(){
 
   data.name = document.getElementById("userName").value;
+
   saveData();
 
   document.getElementById("introScreen").style.display = "none";
@@ -344,20 +308,16 @@ function renderSong(index){
   const songData = data.songs[index] || {};
 
   const html = `
-  
+
   <div class="song-screen" style="display:block">
 
-    <div class="song-header">
+    <div class="topbar">
+      <div>← ATRÁS</div>
+      <div>TEMA ${index+1} / ${songs.length}</div>
+    </div>
 
-      <div class="topbar">
-        <div>← ATRÁS</div>
-        <div>TEMA ${index+1} / ${songs.length}</div>
-      </div>
-
-      <div class="song-title">
-        ${songs[index]}
-      </div>
-
+    <div class="song-title">
+      ${songs[index]}
     </div>
 
     <div class="section">
@@ -366,7 +326,7 @@ function renderSong(index){
 
       <div class="checkbox-group">
 
-        ${contextOptions.map(option=>`
+        ${contextOptions.map(option => `
 
           <label class="checkbox-item">
 
@@ -442,13 +402,14 @@ function renderSong(index){
 
 function collectCurrentSongData(){
 
-  const selectedContext = document.querySelector('input[name="context"]:checked');
+  const selectedContext =
+    document.querySelector('input[name="context"]:checked');
 
   data.songs[currentSong] = {
-    title: songs[currentSong],
-    context: selectedContext ? selectedContext.value : "",
-    score: document.getElementById("scoreInput").value,
-    notes: document.getElementById("notesInput").value
+    title:songs[currentSong],
+    context:selectedContext ? selectedContext.value : "",
+    score:document.getElementById("scoreInput").value,
+    notes:document.getElementById("notesInput").value
   };
 
   saveData();
@@ -498,10 +459,10 @@ async function generatePDF(){
 
   y += 20;
 
-  doc.setFontSize(12);
   doc.setFont("helvetica","normal");
+  doc.setFontSize(12);
 
-  doc.text(`Owner: ${data.name}`,20,y);
+  doc.text(`Nombre: ${data.name}`,20,y);
 
   y += 20;
 
@@ -534,18 +495,18 @@ async function generatePDF(){
 
     y += 8;
 
+    doc.text("Anotaciones:",20,y);
+
+    y += 8;
+
     const splitNotes = doc.splitTextToSize(
       song.notes || "",
       160
     );
 
-    doc.text("Anotaciones:",20,y);
-
-    y += 8;
-
     doc.text(splitNotes,20,y);
 
-    y += splitNotes.length * 7 + 16;
+    y += splitNotes.length * 7 + 18;
 
   });
 
