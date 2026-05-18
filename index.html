@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MALMÖ 040 — Escucha Interna EP</title>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -27,295 +29,396 @@
         ...payload,
         createdAt: serverTimestamp()
       });
-    }
+    };
   </script>
+
   <style>
     :root {
-      --bg: #f7f5f0;
-      --text: #2f2d29;
-      --muted: #8b867d;
-      --line: #ded9cf;
-      --black: #000;
-      --white: #fff;
-      --radius: 14px;
+      --bg: #ffffff;
+      --ink: #111111;
+      --muted: #777777;
+      --line: #111111;
+      --soft-line: #d9d9d9;
+      --error: #b00020;
     }
 
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
       background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
     }
 
     .app {
-      width: min(100%, 1040px);
-      padding: 54px clamp(22px, 6vw, 80px);
+      width: min(100%, 980px);
+      padding: 56px clamp(22px, 6vw, 72px);
+    }
+
+    .page {
+      animation: fadeIn .22s ease both;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-meta {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 58px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: var(--muted);
+      text-transform: uppercase;
+      min-height: 18px;
+    }
+
+    .top-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .top-right {
+      margin-left: auto;
+      min-width: 110px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    h1, h2 {
+      font-family: "Arial Black", Impact, Helvetica, Arial, sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.055em;
+      margin: 0;
     }
 
     h1 {
-      font-size: clamp(42px, 7vw, 78px);
-      line-height: 0.96;
-      letter-spacing: -0.055em;
-      margin: 0 0 72px;
-      font-weight: 900;
-      text-transform: uppercase;
+      font-size: clamp(40px, 8vw, 86px);
+      line-height: .88;
+      max-width: 760px;
+      margin-bottom: 54px;
     }
 
     h2 {
-      font-size: clamp(38px, 5.5vw, 60px);
-      letter-spacing: -0.045em;
-      line-height: 1;
-      margin: 0 0 54px;
-      font-weight: 850;
+      font-size: clamp(36px, 7vw, 76px);
+      line-height: .9;
+      max-width: 860px;
+      margin-bottom: 38px;
     }
 
-    h3 {
-      font-size: 26px;
-      margin: 0 0 26px;
-      font-weight: 850;
-      letter-spacing: -0.03em;
-    }
-
-    p, li {
-      font-size: 22px;
-      line-height: 1.38;
-    }
-
-    .intro-title {
-      font-size: 24px;
-      font-weight: 850;
+    .section-label {
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 36px;
+      letter-spacing: .04em;
+      margin-bottom: 22px;
     }
 
-    .instructions {
-      max-width: 830px;
-      margin-bottom: 44px;
+    .copy {
+      max-width: 680px;
+      font-size: 18px;
+      line-height: 1.42;
+      margin-bottom: 42px;
     }
 
-    .instructions ul {
-      margin: 24px 0 38px 0;
-      padding-left: 24px;
-      font-style: italic;
+    .copy p {
+      margin: 0 0 22px;
     }
 
-    .strong { font-weight: 850; }
+    .copy ul {
+      margin: 18px 0 30px;
+      padding-left: 22px;
+    }
 
-    .field { margin: 42px 0; }
+    .copy li {
+      margin: 5px 0;
+    }
 
-    label.title {
+    .strong {
+      font-weight: 800;
+    }
+
+    .field {
+      margin: 36px 0;
+    }
+
+    .field-title {
       display: block;
-      font-size: 30px;
-      font-weight: 850;
-      letter-spacing: -0.035em;
-      margin-bottom: 16px;
+      font-family: "Courier New", monospace;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      margin-bottom: 12px;
     }
 
     .required {
-      display: inline-flex;
-      width: 22px;
-      height: 22px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: #edeae4;
-      font-size: 18px;
-      margin-left: 4px;
-      vertical-align: middle;
+      color: var(--muted);
     }
 
-    input[type="text"], input[type="number"], textarea {
-      width: min(100%, 520px);
-      background: var(--white);
-      border: 1.5px solid #d2cdc3;
-      border-radius: var(--radius);
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-      font-size: 22px;
-      color: var(--text);
-      padding: 16px 18px;
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: min(100%, 560px);
+      border: 1.5px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 0;
+      padding: 14px 16px;
+      font-size: 18px;
+      font-family: Helvetica, Arial, sans-serif;
       outline: none;
-      font-family: inherit;
     }
 
     textarea {
-      width: min(100%, 940px);
+      width: min(100%, 760px);
       min-height: 150px;
       resize: vertical;
+      line-height: 1.35;
     }
 
-    input:focus, textarea:focus {
-      border-color: #000;
-      box-shadow: 0 0 0 4px rgba(0,0,0,.08);
+    input:focus,
+    textarea:focus {
+      box-shadow: 0 0 0 3px rgba(0,0,0,.08);
     }
 
     .options {
       display: grid;
-      gap: 18px;
+      gap: 12px;
       margin-top: 14px;
     }
 
     .option {
-      display: flex;
-      gap: 16px;
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 12px;
       align-items: center;
-      font-size: 24px;
-      cursor: pointer;
       width: fit-content;
+      font-size: 18px;
+      cursor: pointer;
     }
 
     .option input {
       appearance: none;
-      width: 30px;
-      height: 30px;
-      border: 1.5px solid #d1ccc2;
-      border-radius: 7px;
+      width: 22px;
+      height: 22px;
+      border: 1.5px solid var(--ink);
       background: #fff;
-      box-shadow: 0 2px 7px rgba(0,0,0,.08);
-      cursor: pointer;
       position: relative;
+      cursor: pointer;
     }
 
     .option input:checked {
-      background: #000;
-      border-color: #000;
+      background: var(--ink);
     }
 
     .option input:checked::after {
       content: "";
       position: absolute;
-      left: 8px;
-      top: 4px;
-      width: 8px;
-      height: 15px;
-      border: solid white;
-      border-width: 0 3px 3px 0;
+      left: 6px;
+      top: 2px;
+      width: 7px;
+      height: 13px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
       transform: rotate(45deg);
     }
 
-    .nav-top {
+    .nav-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 34px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #000;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 50px;
+      max-width: 760px;
     }
 
-    .nav-left {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
+    .back-btn {
       border: 0;
       background: transparent;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
       padding: 0;
-      letter-spacing: .04em;
-    }
-
-    .nav-center {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .12em;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
       text-transform: uppercase;
-      pointer-events: none;
+      cursor: pointer;
     }
 
-    .top-line {
-      display: none;
+    .progress {
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .rule {
+      width: min(100%, 760px);
+      height: 1.5px;
+      background: var(--ink);
+      margin: 0 0 34px;
+      transform-origin: left;
+      animation: ruleIn .28s ease both;
+    }
+
+    @keyframes ruleIn {
+      from { transform: scaleX(.05); opacity: .2; }
+      to { transform: scaleX(1); opacity: 1; }
+    }
+
+    .song-head {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 22px;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+
+    .song-index {
+      font-family: "Courier New", monospace;
+      font-size: 38px;
+      line-height: 1;
+      color: var(--muted);
+      padding-top: 8px;
     }
 
     .button-row {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 32px;
+      margin-top: 38px;
     }
 
-    button.primary, button.secondary {
-      border: 0;
-      border-radius: 11px;
-      padding: 15px 22px;
-      font-size: 22px;
-      font-weight: 850;
+    button.primary,
+    button.secondary {
+      font-family: "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      border-radius: 0;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
-      letter-spacing: -0.03em;
+      border: 1.5px solid var(--ink);
     }
 
     button.primary {
-      background: #000;
+      background: var(--ink);
       color: #fff;
     }
 
     button.secondary {
-      background: transparent;
-      color: #000;
-      border: 1.5px solid #000;
+      background: #fff;
+      color: var(--ink);
     }
 
-    .arrow { font-size: 30px; line-height: 0; }
-
-    .hidden { display: none; }
-
-    .progress {
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+    button:hover {
+      opacity: .82;
     }
 
     .error {
-      color: #b00020;
-      font-size: 17px;
-      font-weight: 750;
-      margin-top: 14px;
+      color: var(--error);
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 10px;
     }
 
     .success-card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 34px;
-      max-width: 760px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+      border: 1.5px solid var(--ink);
+      padding: 26px;
+      max-width: 700px;
+    }
+
+    .success-card p {
+      margin-top: 0;
+      font-size: 18px;
+      line-height: 1.4;
     }
 
     .summary {
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid var(--line);
-      font-size: 18px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--soft-line);
+      font-family: "Courier New", monospace;
+      font-size: 14px;
       color: var(--muted);
+      text-transform: uppercase;
     }
 
-    @media (max-width: 640px) {
-      .app { padding-top: 34px; }
-      h1 { margin-bottom: 42px; }
-      h2 { margin-bottom: 36px; }
-      p, li { font-size: 19px; }
-      .option { font-size: 20px; }
-      label.title { font-size: 26px; }
-      .nav-top { margin-bottom: 46px; }
+    @media (max-width: 700px) {
+      .app {
+        padding-top: 32px;
+      }
+
+      .top-meta {
+        margin-bottom: 40px;
+        font-size: 11px;
+      }
+
+      .top-center {
+        position: static;
+        transform: none;
+        text-align: right;
+      }
+
+      .top-right {
+        display: none;
+      }
+
+      .song-head {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .song-index {
+        font-size: 20px;
+      }
+
+      h1 {
+        margin-bottom: 40px;
+      }
+
+      h2 {
+        margin-bottom: 28px;
+      }
+
+      .copy {
+        font-size: 17px;
+      }
     }
   </style>
 </head>
+
 <body>
   <main class="app">
-    <section id="introPage">
+    <div class="top-meta">
+      <div>INT. #040</div>
+      <div class="top-center">ESCUCHA INTERNA / EP</div>
+      <div class="top-right"><span id="progressTop"></span></div>
+    </div>
+
+    <section id="introPage" class="page">
       <h1>MALMÖ 040 — ESCUCHA INTERNA EP</h1>
 
-      <div class="instructions">
-        <div class="intro-title">Instrucciones</div>
+      <div class="copy">
+        <div class="section-label">Instrucciones</div>
         <p>La valoración NO representa únicamente cuánto te gusta el tema.</p>
 
         <p class="strong">La nota debe valorar:</p>
@@ -329,60 +432,65 @@
         </ul>
 
         <p><span class="strong">IMPORTANTE:</span><br>
-          Un tema puede ser un 10 como track de disco pero no funcionar como single.<br>
-          Y un single puede ser muy efectivo aunque no sea el mejor tema emocionalmente.<br>
-          <span class="strong">La nota que pongamos debe de ser en base al contexto asociado a la canción.</span>
+          Un tema puede ser un 10 como track de disco pero no funcionar como single.
+          Un single puede ser muy efectivo aunque no sea el mejor tema emocionalmente.
         </p>
+
+        <p class="strong">La nota debe ponerse en base al contexto asociado a la canción.</p>
       </div>
 
       <div class="field">
-        <label class="title" for="personName">Nombre <span class="required">*</span></label>
+        <label class="field-title" for="personName">Owner / Nombre <span class="required">*</span></label>
         <input id="personName" type="text" autocomplete="name" />
         <div id="introError" class="error hidden">Escribe tu nombre para continuar.</div>
       </div>
 
-      <button class="primary" onclick="startForm()">Next <span class="arrow">→</span></button>
+      <button class="primary" onclick="startForm()">Empezar →</button>
     </section>
 
-    <section id="songPage" class="hidden">
-      <div class="nav-top">
-        <button class="nav-left" onclick="prevPage()"><span class="arrow">←</span> Atrás</button>
-        <div class="nav-center">ESCUCHA INTERNA / EP</div>
+    <section id="songPage" class="page hidden">
+      <div class="nav-row">
+        <button class="back-btn" onclick="prevPage()">← Atrás</button>
         <div class="progress" id="progress"></div>
       </div>
-      <h2 id="songTitle"></h2>
+
+      <div class="rule"></div>
+
+      <div class="song-head">
+        <div class="song-index" id="songIndex"></div>
+        <h2 id="songTitle"></h2>
+      </div>
 
       <div class="field">
-        <label class="title">Contexto <span class="required">*</span></label>
+        <label class="field-title">Contexto <span class="required">*</span></label>
         <div class="options" id="contextOptions"></div>
         <div id="contextError" class="error hidden">Marca un contexto.</div>
       </div>
 
       <div class="field">
-        <label class="title" for="rating">Nota <span class="required">*</span></label>
-        <input id="rating" type="number" min="1" max="10" step="0.1" />
+        <label class="field-title" for="rating">Nota <span class="required">*</span></label>
+        <input id="rating" type="number" min="1" max="10" step="0.1" inputmode="decimal" />
         <div id="ratingError" class="error hidden">Pon una nota del 1 al 10.</div>
       </div>
 
       <div class="field">
-        <label class="title" for="notes">Anotaciones <span class="required">*</span></label>
+        <label class="field-title" for="notes">Anotaciones <span class="required">*</span></label>
         <textarea id="notes"></textarea>
         <div id="notesError" class="error hidden">Escribe alguna anotación.</div>
       </div>
 
       <div class="button-row">
-        <button class="primary" onclick="nextSong()" id="nextButton">Següent <span class="arrow">→</span></button>
+        <button class="primary" onclick="nextSong()" id="nextButton">Siguiente →</button>
         <button class="secondary" onclick="saveDraft()">Guardar borrador</button>
       </div>
     </section>
 
-    <section id="donePage" class="hidden">
+    <section id="donePage" class="page hidden">
       <h1>Escucha enviada</h1>
       <div class="success-card">
-        <p><span class="strong">Listo.</span> Tus valoraciones han quedado guardadas en este dispositivo.</p>
-        <p>Ahora puedes descargar un informe PDF limpio con todas tus respuestas.</p>
+        <p><span class="strong">Listo.</span> Tus valoraciones han quedado guardadas online y se ha generado tu PDF.</p>
         <div class="button-row">
-          <button class="primary" onclick="downloadPDF()">Descargar PDF</button>
+          <button class="primary" onclick="downloadPDF()">Descargar PDF otra vez</button>
           <button class="secondary" onclick="restart()">Volver a empezar</button>
         </div>
         <div class="summary" id="finalSummary"></div>
@@ -391,7 +499,6 @@
   </main>
 
   <script>
-    // EDITA AQUÍ LOS TÍTULOS DE LOS TEMAS
     const songs = [
       "La sombra del viento",
       "Las cosas importantes",
@@ -413,25 +520,32 @@
       responses: songs.map(song => ({ song, context: "", rating: "", notes: "" }))
     };
 
+    if (!data.responses || data.responses.length !== songs.length) {
+      data.responses = songs.map(song => ({ song, context: "", rating: "", notes: "" }));
+    }
+
     const introPage = document.getElementById("introPage");
     const songPage = document.getElementById("songPage");
     const donePage = document.getElementById("donePage");
     const personName = document.getElementById("personName");
     const songTitle = document.getElementById("songTitle");
+    const songIndex = document.getElementById("songIndex");
     const progress = document.getElementById("progress");
+    const progressTop = document.getElementById("progressTop");
     const contextOptions = document.getElementById("contextOptions");
     const rating = document.getElementById("rating");
     const notes = document.getElementById("notes");
     const nextButton = document.getElementById("nextButton");
 
     personName.value = data.person || "";
+    progressTop.textContent = "";
 
     function show(page) {
       introPage.classList.add("hidden");
       songPage.classList.add("hidden");
       donePage.classList.add("hidden");
       page.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function startForm() {
@@ -446,19 +560,20 @@
 
     function renderSong() {
       const response = data.responses[currentIndex];
-      progress.textContent = `Tema ${currentIndex + 1} de ${songs.length}`;
+      progress.textContent = `Tema ${currentIndex + 1} / ${songs.length}`;
+      progressTop.textContent = `Tema ${currentIndex + 1} / ${songs.length}`;
+      songIndex.textContent = String(currentIndex + 1).padStart(2, "0");
       songTitle.textContent = response.song;
       rating.value = response.rating || "";
       notes.value = response.notes || "";
-      nextButton.innerHTML = currentIndex === songs.length - 1 ? "Enviar <span class='arrow'>→</span>" : "Següent <span class='arrow'>→</span>";
+      nextButton.textContent = currentIndex === songs.length - 1 ? "Enviar →" : "Siguiente →";
 
       contextOptions.innerHTML = "";
       contexts.forEach(context => {
-        const id = `context-${currentIndex}-${context}`.replaceAll(" ", "-");
         const label = document.createElement("label");
         label.className = "option";
         label.innerHTML = `
-          <input type="checkbox" name="context" id="${id}" ${response.context === context ? "checked" : ""} onchange="selectContext('${context.replaceAll("'", "\\'")}')" />
+          <input type="checkbox" name="context" ${response.context === context ? "checked" : ""} onchange="selectContext('${context.replaceAll("'", "\\'")}')" />
           <span>${context}</span>
         `;
         contextOptions.appendChild(label);
@@ -469,7 +584,9 @@
 
     function selectContext(context) {
       data.responses[currentIndex].context = context;
-      renderSong();
+      document.querySelectorAll('input[name="context"]').forEach(input => {
+        input.checked = input.parentElement.textContent.trim() === context;
+      });
       saveDraft();
     }
 
@@ -505,6 +622,7 @@
       if (currentIndex < songs.length - 1) {
         currentIndex++;
         renderSong();
+        show(songPage);
       } else {
         submitAll();
       }
@@ -514,10 +632,12 @@
       captureCurrent();
       saveDraft();
       if (currentIndex === 0) {
+        progressTop.textContent = "";
         show(introPage);
       } else {
         currentIndex--;
         renderSong();
+        show(songPage);
       }
     }
 
@@ -538,6 +658,7 @@
 
         document.getElementById("finalSummary").textContent = `${data.person} — ${data.responses.length} temas valorados y guardados online.`;
         downloadPDF();
+        progressTop.textContent = "";
         show(donePage);
       } catch (error) {
         console.error(error);
@@ -565,71 +686,72 @@
       }
 
       function label(text) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(9);
-        doc.setTextColor(120, 120, 120);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(0, 0, 0);
         doc.text(text.toUpperCase(), margin, y);
         y += 6;
       }
 
-      function value(text, size = 13) {
+      function value(text, size = 12) {
         doc.setFont("helvetica", "normal");
         doc.setFontSize(size);
-        doc.setTextColor(35, 35, 35);
+        doc.setTextColor(0, 0, 0);
         const lines = doc.splitTextToSize(clean(text), contentWidth);
         doc.text(lines, margin, y);
         y += lines.length * (size * 0.42) + 6;
       }
 
-      doc.setFillColor(247, 245, 240);
+      doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, pageWidth, pageHeight, "F");
 
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(28);
-      doc.setTextColor(20, 20, 20);
+      doc.setFontSize(25);
+      doc.setTextColor(0, 0, 0);
       doc.text("MALMÖ 040", margin, y);
-      y += 12;
-      doc.setFontSize(22);
+      y += 11;
+      doc.setFontSize(18);
       doc.text("ESCUCHA INTERNA EP", margin, y);
-      y += 14;
+      y += 12;
 
-      doc.setDrawColor(20, 20, 20);
-      doc.setLineWidth(0.5);
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.4);
       doc.line(margin, y, pageWidth - margin, y);
       y += 14;
 
-      label("Persona");
-      value(data.person, 16);
+      label("Owner");
+      value(data.person, 14);
 
       const validRatings = data.responses.map(r => Number(r.rating)).filter(n => !Number.isNaN(n));
       const avg = validRatings.length ? (validRatings.reduce((a,b) => a + b, 0) / validRatings.length).toFixed(1) : "—";
       const singles = data.responses.filter(r => r.context === "Single EP" || r.context === "Single fuera de EP").length;
 
       label("Resumen");
-      value(`Temas valorados: ${data.responses.length} · Nota media: ${avg} · Singles marcados: ${singles}`, 12);
+      value(`Temas valorados: ${data.responses.length} · Nota media: ${avg} · Singles marcados: ${singles}`, 11);
 
       data.responses.forEach((r, i) => {
-        addPageIfNeeded(70);
+        addPageIfNeeded(68);
 
-        doc.setDrawColor(215, 211, 202);
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.2);
         doc.line(margin, y, pageWidth - margin, y);
-        y += 10;
+        y += 9;
 
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(19);
-        doc.setTextColor(20, 20, 20);
-        const titleLines = doc.splitTextToSize(`${i + 1}. ${r.song}`, contentWidth);
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        const titleLines = doc.splitTextToSize(`${String(i + 1).padStart(2, "0")} ${r.song}`, contentWidth);
         doc.text(titleLines, margin, y);
-        y += titleLines.length * 8 + 5;
+        y += titleLines.length * 7 + 6;
 
         label("Contexto");
-        value(r.context || "—", 13);
+        value(r.context || "—", 11);
 
         label("Nota");
-        value(r.rating || "—", 13);
+        value(r.rating || "—", 11);
 
         label("Anotaciones");
-        value(r.notes || "—", 12);
+        value(r.notes || "—", 11);
       });
 
       const fileName = `MALMO_040_Escucha_${(data.person || "respuesta").replace(/\s+/g, "_")}.pdf`;
