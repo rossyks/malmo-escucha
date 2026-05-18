@@ -94,13 +94,6 @@
       white-space: nowrap;
     }
 
-    .top-right {
-      margin-left: auto;
-      min-width: 110px;
-      text-align: right;
-      white-space: nowrap;
-    }
-
     h1, h2 {
       font-family: "Arial Black", Impact, Helvetica, Arial, sans-serif;
       font-weight: 900;
@@ -306,6 +299,26 @@
       margin-top: 38px;
     }
 
+    .bottom-nav {
+      width: min(100%, 760px);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 18px;
+      margin-top: 42px;
+      padding-top: 22px;
+      border-top: 1.5px solid var(--ink);
+    }
+
+    .bottom-nav .progress {
+      text-align: center;
+    }
+
+    .bottom-nav .primary {
+      justify-self: end;
+    }
+
+
     button.primary,
     button.secondary {
       font-family: "Courier New", monospace;
@@ -378,10 +391,6 @@
         text-align: right;
       }
 
-      .top-right {
-        display: none;
-      }
-
       .song-head {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -411,7 +420,6 @@
     <div class="top-meta">
       <div>INT. #040</div>
       <div class="top-center">ESCUCHA INTERNA / EP</div>
-      <div class="top-right"><span id="progressTop"></span></div>
     </div>
 
     <section id="introPage" class="page">
@@ -449,11 +457,6 @@
     </section>
 
     <section id="songPage" class="page hidden">
-      <div class="nav-row">
-        <button class="back-btn" onclick="prevPage()">← Atrás</button>
-        <div class="progress" id="progress"></div>
-      </div>
-
       <div class="rule"></div>
 
       <div class="song-head">
@@ -479,9 +482,10 @@
         <div id="notesError" class="error hidden">Escribe alguna anotación.</div>
       </div>
 
-      <div class="button-row">
+      <div class="bottom-nav">
+        <button class="back-btn" onclick="prevPage()">← Atrás</button>
+        <div class="progress" id="progress"></div>
         <button class="primary" onclick="nextSong()" id="nextButton">Siguiente →</button>
-        <button class="secondary" onclick="saveDraft()">Guardar borrador</button>
       </div>
     </section>
 
@@ -531,14 +535,12 @@
     const songTitle = document.getElementById("songTitle");
     const songIndex = document.getElementById("songIndex");
     const progress = document.getElementById("progress");
-    const progressTop = document.getElementById("progressTop");
     const contextOptions = document.getElementById("contextOptions");
     const rating = document.getElementById("rating");
     const notes = document.getElementById("notes");
     const nextButton = document.getElementById("nextButton");
 
     personName.value = data.person || "";
-    progressTop.textContent = "";
 
     function show(page) {
       introPage.classList.add("hidden");
@@ -561,7 +563,6 @@
     function renderSong() {
       const response = data.responses[currentIndex];
       progress.textContent = `Tema ${currentIndex + 1} / ${songs.length}`;
-      progressTop.textContent = `Tema ${currentIndex + 1} / ${songs.length}`;
       songIndex.textContent = String(currentIndex + 1).padStart(2, "0");
       songTitle.textContent = response.song;
       rating.value = response.rating || "";
@@ -632,8 +633,7 @@
       captureCurrent();
       saveDraft();
       if (currentIndex === 0) {
-        progressTop.textContent = "";
-        show(introPage);
+            show(introPage);
       } else {
         currentIndex--;
         renderSong();
@@ -658,8 +658,7 @@
 
         document.getElementById("finalSummary").textContent = `${data.person} — ${data.responses.length} temas valorados y guardados online.`;
         downloadPDF();
-        progressTop.textContent = "";
-        show(donePage);
+            show(donePage);
       } catch (error) {
         console.error(error);
         alert("Error guardando las respuestas en Firebase.");
